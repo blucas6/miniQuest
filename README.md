@@ -1,2 +1,3 @@
 # miniQuest
-mini roguelike
+a Mini Roguelike
+
