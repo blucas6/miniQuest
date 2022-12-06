@@ -20,8 +20,9 @@ class Entity:
         self.isCOLL = col           # is the object able to be collided with?
         self.POS = pos
         self.MODE = LighMode.UNSEEN
-
-        self.activated = False
+        
+        self.already_seen = False   # entities stay in sight if already seen once
+        self.activated = False      # track activation of entities, only ONCE
 
     def update(self):
         pass
@@ -68,21 +69,11 @@ class Stair(Entity):
 
         Entity.__init__(self, game, prop, icon, SEABLUE, WHITE, False, pos)
     def ACTION(self, dir):
-        if dir == "up" and self.INFO == Property.UPSTAIR:
-            # GO UP - check if there is an above level first
-            # or create new level and append to level list
-            if len(self.game.LEVELS)-1 == self.game.CURR_LEVEL:
-                self.game.newLevel()
-            else:
-                self.game.CURR_LEVEL += 1
-            print("go up")
-            self.game.MENUS[0].MSG_STR = "You walk up the stairs"
+        if dir == "up" and self.PROP == Property.UPSTAIR:
+            self.game.changeLevel("up")
             return True
-        elif dir == "down" and self.INFO == Property.DOWNSTAIR:
-            # GO DOWN - level pointer back one
-            self.game.CURR_LEVEL -= 1
-            print("go down")
-            self.game.MENUS[0].MSG_STR = "You descend down"
+        elif dir == "down" and self.PROP == Property.DOWNSTAIR:
+            self.game.changeLevel("down")
             return True
         return False
 
@@ -92,12 +83,15 @@ class Torch(Entity):
     def ACTIVATE(self):
         if not self.activated:
             self.activated = True
+            self.BG = ORANGE
     def update(self):
         if self.activated:
             self.MODE = LighMode.LIT
-            # for coord in [[-1,-1], [-1,0], [-1,1], [0,-1], [0,0], [0,1], [1,-1], [1,0], [1,1], [0,-2], [2,0], [0,2], [2,0]]:
-            #     if self.POS[0] + coord[0] >= 0 and self.POS[0] + coord[0] < MAP_W-2 and self.POS[1] + coord[1] >= 0 and self.POS[1] < MAP_H-2:
-            #         self.game.LEVELS[self.game.CURR_LEVEL].map[self.POS[0] + coord[0]][self.POS[1] + coord[1]].MODE    
+            for coord in [[-1,-1], [-1,0], [-1,1], [0,-1], [0,0], [0,1], [1,-1], [1,0], [1,1], [0,-2], [0,2], [-2,0], [2,0]]:
+                row = self.POS[1] + coord[1]
+                col = self.POS[0] + coord[0]
+                if col >= 0 and col < MAP_W and row >= 0 and row < MAP_H:
+                    self.game.CURRENT_LV_O.Light_Map[row][col] = LighMode.LIT 
 
 class Void(Entity):
     def __init__(self, game, pos):

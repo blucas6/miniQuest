@@ -2,6 +2,7 @@ from config import *
 from colors import *
 from icon_config import *
 from properties import Property
+from entity import LighMode
 
 class Actor:
     def __init__(self, game, prop, col, icon, bg, fg, pos):
@@ -12,6 +13,7 @@ class Actor:
         self.ICON = icon
         self.BG = bg
         self.FG = fg
+        self.MODE = LighMode.UNSEEN
 
     def update(self):
         pass

@@ -75,10 +75,10 @@ class Menu:
 class StatBar(Menu):
     def __init__(self, game):
         self.game = game
-        w = MAP_W-1
-        h = UI_STAT_H-1
+        w = UI_STAT_W
+        h = UI_STAT_H
         offx = 0
-        offy = UI_MSG_H + MAP_H + 2
+        offy = 1 + UI_MSG_H + 1 + 1 + MAP_H + 1
         Menu.__init__(self, game, w, h, offx, offy)
 
     def genString(self):
@@ -88,10 +88,10 @@ class StatBar(Menu):
 class InfoBar(Menu):
     def __init__(self, game):
         self.game = game
-        w = UI_INFO_W-2
-        h = MAP_H + UI_STAT_H-2
-        offx = MAP_W + 2
-        offy = UI_MSG_H + 2
+        w = UI_INFO_W
+        h = UI_INFO_H
+        offx = 1 + MAP_W + 1 + 1
+        offy = 1 + UI_MSG_H + 1 + 1
         Menu.__init__(self, game, w, h, offx, offy)
 
     def genString(self):
@@ -101,8 +101,8 @@ class InfoBar(Menu):
 class MessageBar(Menu):
     def __init__(self, game):
         self.game = game
-        w = MAP_W+UI_INFO_W-1
-        h = UI_MSG_H-1
+        w = UI_MSG_W
+        h = UI_MSG_H
         offx = 1
         offy = 1
         self.MSG_STR = "Welcome to MiniQuest!"

@@ -12,8 +12,6 @@ class Level:
     def __init__(self, game, id):
         self.Lvl_ID = id
         self.game = game
-        self.levelw = MAP_W -1     # -2 for first border and buffer
-        self.levelh = MAP_H -1
 
         self.Light_Map = self.LoadBlankLevelMap()   # controls what light mode each tile has - unseen, seen, lit    
         self.Tower_Map = []                         # stores all floors and wall tiles
@@ -27,13 +25,30 @@ class Level:
 
         self.genMap()
 
+    def clearLightMap(self):
+        self.Light_Map = self.LoadBlankLevelMap()
+
     def update(self):
         # compile Level_Map array with all items and creatures
-        self.Level_Map = self.LoadBlankLevelMap()
-        for i in self.items:
-            self.Level_Map[i.POS[1]][i.POS[0]].append(i)
         for c in self.creatures:
-            self.Level_Map[c.POS[1]][i.POS[0]].append(c)
+            lm = self.Light_Map[c.POS[1]][c.POS[0]]
+            if lm == LighMode.SEEN:
+                c.MODE = LighMode.SEEN
+            elif lm == LighMode.LIT:
+                c.MODE = LighMode.LIT
+            else:
+                c.MODE = LighMode.UNSEEN
+            self.Level_Map[c.POS[1]][c.POS[0]].append(c)
+        for i in self.items:
+            lm = self.Light_Map[i.POS[1]][i.POS[0]]
+            if lm == LighMode.SEEN:
+                i.MODE = LighMode.SEEN
+                i.already_seen = True
+            elif lm == LighMode.LIT:
+                i.MODE = LighMode.LIT
+            elif lm == LighMode.UNSEEN and not i.already_seen:
+                i.MODE = LighMode.UNSEEN
+            self.Level_Map[i.POS[1]][i.POS[0]].append(i)
 
     def LoadBlankLevelMap(self):
         m = []
@@ -59,8 +74,8 @@ class Level:
         self.addTorches()
         self.addCreatures()
 
-        for row in self.astarGrid:
-            print(row)
+        # for row in self.astarGrid:
+        #     print(row)
 
         self.update()
 
@@ -101,12 +116,12 @@ class Level:
                 row.append(0)
             grid.append(row)
 
-        for r in grid:
-            print(r)
+        # for r in grid:
+        #     print(r)
         # add corners
         c_points = [[0, CURVATURE], [CURVATURE, 0], [CURVATURE, MAP_H-1], [0, MAP_H-1 - CURVATURE]]
         for c in range(0, 4, 2):
-            print(c_points[c], c_points[c+1], MAP_W, MAP_H)
+            # print(c_points[c], c_points[c+1], MAP_W, MAP_H)
             path = aStar(c_points[c], c_points[c+1], MAP_W, MAP_H, grid)
             # calculate symmetric path across horiz
             path_sym = []
@@ -163,6 +178,7 @@ class Level:
             # add downstair where player is standing
             dwn = copy.deepcopy(self.game.PLAYER.POS)
             self.items.append(Stair(self.game, "down", dwn))
+            # print("added stair", dwn)
             self.available_pts.remove(dwn)
             # add upstair somewhere
             s = rand.randint(0, len(self.available_pts)-1)

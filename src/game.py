@@ -40,6 +40,7 @@ class Game:
 
         self.CURR_LEVEL = 0
         self.LEVELS = [Level(self, 1)]
+        self.CURRENT_LV_O = self.LEVELS[self.CURR_LEVEL]
 
         # MENUS
         self.MENUS = [MessageBar(self), StatBar(self), InfoBar(self)]
@@ -49,9 +50,6 @@ class Game:
         # make current level the new level
         new_l = Level(self, self.CURR_LEVEL+1)
         self.LEVELS.append(new_l)
-        self.CURR_LEVEL += 1
-        for e in self.LEVELS[self.CURR_LEVEL].items:
-            print(e.INFO, e.POS)
 
     def main(self):
         # game loop
@@ -69,8 +67,10 @@ class Game:
 
 
     def update(self):
+        self.CURRENT_LV_O.clearLightMap()
+
         # PLAYER FOV 
-        self.PLAYER.FOVsight(self.LEVELS[self.CURR_LEVEL])
+        self.PLAYER.FOVsight(self.CURRENT_LV_O)
 
         # UPDATE entities and check if they are being ACTIVATED
         for e in self.LEVELS[self.CURR_LEVEL].items:
@@ -83,7 +83,7 @@ class Game:
             m.loadStr()
 
         # UPDATE LEVEL MAP
-        self.LEVELS[self.CURR_LEVEL].update()
+        self.CURRENT_LV_O.update()
     
     def events(self):
         rec_event = False
@@ -93,7 +93,7 @@ class Game:
                 if event.type == pygame.QUIT:
                     self.playing = False
                     rec_event = True
-                if event.type == pygame.KEYUP:
+                if event.type == pygame.KEYDOWN:
                     mods = pygame.key.get_mods()
                     if event.key == pygame.K_q and (mods & pygame.KMOD_LSHIFT or mods & pygame.KMOD_RSHIFT):
                         self.playing = False
@@ -124,3 +124,22 @@ class Game:
         for row in range(len(self.screen_tiles)):
             for col in range(len(self.screen_tiles[0])):
                 self.window.blit(self.screen_tiles[row][col], (col*TILESIZE, row*TILESIZE))
+
+
+    def changeLevel(self, dir):
+        if dir == "up":
+            # GO UP - check if there is an above level first
+            # or create new level and append to level list
+            self.CURR_LEVEL += 1
+            if len(self.LEVELS)-1 == self.CURR_LEVEL-1:       # if we were already at highest level then make new level
+                self.newLevel()
+            print("go up")   
+            self.MENUS[0].MSG_STR = "You walk up the stairs"
+        elif dir == "down":
+            # GO DOWN - level pointer back one
+            self.CURR_LEVEL -= 1
+            print("go down")
+            self.MENUS[0].MSG_STR = "You descend down"
+        
+        self.CURRENT_LV_O = self.LEVELS[self.CURR_LEVEL]
+

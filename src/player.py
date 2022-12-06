@@ -18,10 +18,9 @@ class Player:
         self.INFO = Property.PLAYER
 
         # STATS
-        self.str = P_ST_STRENGTH
-        self.dex = P_ST_DEX
-        self.luck = P_ST_LUCK
-
+        self.str = PLAYER_ST_STRENGTH
+        self.dex = PLAYER_ST_DEX
+        self.luck = PLAYER_ST_LUCK
 
     def move(self, dir):
         if self.canMove(dir):
@@ -29,22 +28,16 @@ class Player:
             self.POS[1] += dir[1]
             return True
         return False
-            # print(self.game.LEVELS[self.game.CURR_LEVEL].map[self.POS[1]][self.POS[0]].INFO)
-            # print(self.POS)
-            # for r in range(self.game.LEVELS[self.game.CURR_LEVEL].levelh+1):
-            #     for c in range(self.game.LEVELS[self.game.CURR_LEVEL].levelw+1):
-            #         print(self.game.LEVELS[self.game.CURR_LEVEL].map[r][c].curricon, end=" ")
-            #     print("")
-            # for e in self.game.LEVELS[self.game.CURR_LEVEL].entities:
-            #     print(e.INFO, e.POS)
 
     def stairs(self, dir):
-        for e in self.game.LEVELS[self.game.CURR_LEVEL].entities:
-            if (e.PROP == Property.UPSTAIR or e.PROP == Property.DOWNSTAIR) and e.POS == self.POS:
-                print("compare:", e.POS, e.PROP, self.POS)
-                # Check for success
-                if e.ACTION(dir):
-                    return True
+        item_list = self.game.CURRENT_LV_O.Level_Map[self.POS[1]][self.POS[0]]
+        if item_list:
+            for i in item_list:
+                if (i.PROP == Property.UPSTAIR or i.PROP == Property.DOWNSTAIR):
+                    print("compare:", i.POS, i.PROP, self.POS)
+                    # Check for success
+                    if i.ACTION(dir):
+                        return True
         return False
 
     def canMove(self, d):
@@ -52,7 +45,7 @@ class Player:
         if lvl_o.Tower_Map[self.POS[1] + d[1]][self.POS[0] + d[0]].isCOLL:
             return False
         tile_list = lvl_o.Level_Map[self.POS[1] + d[1]][self.POS[0] + d[0]]
-        if not tile_list:
+        if tile_list:
             for i in tile_list:
                 if i.isCOLL:
                     return False
@@ -62,11 +55,11 @@ class Player:
         # access astar grid from level
         grid = deepcopy(self.game.LEVELS[self.game.CURR_LEVEL].astarGrid)
         FOV(grid, self.POS)
-        print("------------------------")
-        for r in grid:
-            print(r)
+        # print("-----------FOV-------------")
+        # for r in grid:
+        #     print(r)
         for r in range(len(level_obj.Light_Map)):
-            for c in range(len(level_obj.Light_Map)):
+            for c in range(len(level_obj.Light_Map[0])):
                 if grid[r][c] == 2 or grid[r][c] == 1:
                     level_obj.Light_Map[r][c] = LighMode.SEEN
                 else:
