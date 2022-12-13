@@ -51,7 +51,8 @@ class Display:
         # UI MAP BOX
         self.addBox(0, 1+UI_MSG_H+1, 1+MAP_W, 1+UI_MSG_H+1 + 1+MAP_H)
         # UI INFO BOX
-        self.addBox(1+MAP_W+1, 1+UI_MSG_H+1, 1+MAP_W+1 + 1+UI_INFO_W, 1+UI_MSG_H+1 + 1+UI_INFO_H)
+        self.addBox(1+MAP_W+1, 1+UI_MSG_H+1+UI_HEALTHBAR_H, 1+MAP_W+1 + 1+UI_INFO_W, 1+UI_MSG_H+1 + UI_HEALTHBAR_H + 1+UI_INFO_H)
+
 
     def addBox(self, stx, sty, boxw, boxh):
         for j in range(int(WIN_HEIGHT / TILESIZE)):
@@ -79,7 +80,6 @@ class Display:
         for m in menus_list:
             for row in range(m.height):
                 for col in range(m.width):
-                    # print(row + m.offy, col + m.offx, row, col)
                     self.screen[row + m.offy][col + m.offx] = m.contents[row][col]
 
         # ADD LEVEL TO SCREEN

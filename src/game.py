@@ -44,7 +44,7 @@ class Game:
         self.CURRENT_LV_O = self.LEVELS[self.CURR_LEVEL]
 
         # MENUS
-        self.MENUS = [MessageBar(self), StatBar(self), InfoBar(self)]
+        self.MENUS = [MessageBar(self), StatBar(self), InfoBar(self), HealthBar(self)]
 
     def newLevel(self):
         # Create new level and add it to the level list

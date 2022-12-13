@@ -19,6 +19,7 @@ class Player:
 
         # STATS
         self.HEALTH = PLAYER_ST_HEALTH
+        self.CURR_HEALTH = PLAYER_ST_HEALTH
         self.STR = PLAYER_ST_STRENGTH
         self.DEX = PLAYER_ST_DEX
         self.LUCK = PLAYER_ST_LUCK
@@ -81,7 +82,7 @@ class Player:
                         level_obj.Light_Map[r][c] = LightMode.UNSEEN
 
     def takeDmg(self, dmg):
-        self.HEALTH -= dmg
+        self.CURR_HEALTH -= dmg
 
         
         

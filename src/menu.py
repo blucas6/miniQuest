@@ -1,4 +1,5 @@
 import pygame
+import math
 
 from configs.config import *
 from colors import *
@@ -6,9 +7,9 @@ from colors import *
 class Menu:
     def __init__(self, game, w, h, offx, offy):
         self.game = game
-        self.str_data = self.genString()
         self.width = w
         self.height = h
+        self.str_data = self.genString()
         self.offx = offx
         self.offy = offy
         self.contents = []
@@ -58,6 +59,8 @@ class Menu:
         # start at 2 on tilesheet
         r = 2
         c = 0
+        if ch == " ":
+            return [0,0]
         for l in range(len(TYPING_STRING)):
             if TYPING_STRING[l] == "\n":
                 r += 1
@@ -72,6 +75,51 @@ class Menu:
         return coords
 
 
+class HealthBar(Menu):
+    def __init__(self, game):
+        self.game = game
+        w = UI_HEALTHBAR_W
+        h = UI_HEALTHBAR_H
+        offx = 1 + MAP_W + 1
+        offy = 1 + UI_MSG_H + 1
+        Menu.__init__(self, game, w, h, offx, offy)
+    
+    def genString(self):
+        give_str = "[" + self.game.PLAYER.name + " " + str(round(self.game.PLAYER.CURR_HEALTH)) + "/" + str(round(self.game.PLAYER.HEALTH))
+        give_str += (" "*(self.width - len(give_str)-1)) + "]"
+        return give_str
+
+    def loadStr(self):
+        self.resetContents()
+        self.str_data = self.genString()
+        row = 0
+        col = 0
+        hp_boxes = round(self.width * self.game.PLAYER.CURR_HEALTH / self.game.PLAYER.HEALTH)
+        print(hp_boxes)
+        for c in range(len(self.str_data)):
+            # print(row, col, self.height, self.width, self.str_data[c])
+            if row > self.height:
+                break
+            if self.str_data[c] == "\n":
+                col = -1
+                row += 1
+            else:
+                if c < hp_boxes:
+                    bg = GREEN
+                    if self.game.PLAYER.CURR_HEALTH / self.game.PLAYER.HEALTH <= 0.1:
+                        bg = RED
+                    elif self.game.PLAYER.CURR_HEALTH / self.game.PLAYER.HEALTH <= 0.5:
+                        bg = ORANGE
+                else:
+                    bg = VOID
+                coords = self.letterImg(self.str_data[c])
+                img = self.Icon(self.game, coords, bg, WHITE)
+                self.contents[row][col] = img
+            if col >= self.width:
+                    row += 1
+                    col = 0
+            col += 1
+
 class StatBar(Menu):
     def __init__(self, game):
         self.game = game
@@ -82,7 +130,7 @@ class StatBar(Menu):
         Menu.__init__(self, game, w, h, offx, offy)
 
     def genString(self):
-        return "STR:%s DEX:%s LUCK:%s\nT:%s LV:%s H:%s" % (self.game.PLAYER.STR, self.game.PLAYER.DEX, self.game.PLAYER.LUCK, self.game.TURN, self.game.CURR_LEVEL+1, self.game.PLAYER.HEALTH)
+        return "STR:%s DEX:%s LUCK:%s\nT:%s LV:%s" % (self.game.PLAYER.STR, self.game.PLAYER.DEX, self.game.PLAYER.LUCK, self.game.TURN, self.game.CURR_LEVEL+1)
 
 
 class InfoBar(Menu):
@@ -91,11 +139,11 @@ class InfoBar(Menu):
         w = UI_INFO_W
         h = UI_INFO_H
         offx = 1 + MAP_W + 1 + 1
-        offy = 1 + UI_MSG_H + 1 + 1
+        offy = 1 + UI_MSG_H + 1 + UI_HEALTHBAR_H + 1
         Menu.__init__(self, game, w, h, offx, offy)
 
     def genString(self):
-        return "%s\n\nArmor:\n\nMainH:\n\nAlt:\n\n" % (self.game.PLAYER.name)
+        return "Armor:\n\nMainH:\n\nAlt:"
 
 
 class MessageBar(Menu):
