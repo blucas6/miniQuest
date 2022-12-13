@@ -1,5 +1,4 @@
 from enum import Enum
-from src.config import *
 import math
 
 # class test(Enum):
@@ -73,18 +72,27 @@ import math
 #     print(r)
 
 
-tmp = []
-for h in range(SCREEN_H):
-    row = []
-    for w in range(SCREEN_W):
-        row.append([])
-    tmp.append(row)
+# tmp = []
+# for h in range(SCREEN_H):
+#     row = []
+#     for w in range(SCREEN_W):
+#         row.append([])
+#     tmp.append(row)
 
-for r in tmp:
-    print(r)
+# for r in tmp:
+#     print(r)
 
-tmp[1][4] = "c"
+# tmp[1][4] = "c"
 
-print("--------------------------------------")
-for r in tmp:
-    print(r)
+# print("--------------------------------------")
+# for r in tmp:
+#     print(r)
+
+def weird(a):
+    if a == 1:
+        return True
+    else:
+        return 5
+    
+print(weird(1))
+print(weird(9))
