@@ -1,12 +1,13 @@
 import pygame
 
 from colors import *
-from config import *
+from configs.config import *
 from tileset import *
 from level import *
 from player import *
 from menu import *
 from display import Display
+from configs.message_config import *
 
 class Game:
     def __init__(self):
@@ -152,12 +153,12 @@ class Game:
             if len(self.LEVELS)-1 == self.CURR_LEVEL-1:       # if we were already at highest level then make new level
                 self.newLevel()
             print("go up")   
-            self.MENUS[0].MSG_STR = "You walk up the stairs"
+            self.MENUS[0].MSG_STR.append(GO_UP_STAIR_MSG)
         elif dir == "down":
             # GO DOWN - level pointer back one
             self.CURR_LEVEL -= 1
             print("go down")
-            self.MENUS[0].MSG_STR = "You descend down"
+            self.MENUS[0].MSG_STR.append(GO_DOWN_STAIR_MSG)
         
         self.CURRENT_LV_O = self.LEVELS[self.CURR_LEVEL]
 

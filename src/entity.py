@@ -1,9 +1,9 @@
 from enum import Enum
 
 from colors import *
-from config import *
+from configs.config import *
 from properties import Property
-from icon_config import *
+from configs.icon_config import *
 
 class LightMode(Enum):
     UNSEEN = 1          # Icon will be turned to a unseen floor piece
@@ -90,7 +90,7 @@ class Torch(Entity):
             for coord in [[-1,-1], [-1,0], [-1,1], [0,-1], [0,0], [0,1], [1,-1], [1,0], [1,1]]:
                 row = self.POS[1] + coord[1]
                 col = self.POS[0] + coord[0]
-                if col >= 0 and col < MAP_W and row >= 0 and row < MAP_H and self.game.Tower_Map[row][col].PROP != Property.WALL:
+                if col >= 0 and col < MAP_W and row >= 0 and row < MAP_H and self.game.CURRENT_LV_O.Tower_Map[row][col].PROP != Property.WALL:
                     self.game.CURRENT_LV_O.Light_Map[row][col] = LightMode.LIT 
             for o_coord in [[-1,0], [1,0], [0,-1], [0,1]]:
                 row = self.POS[1] + o_coord[1]

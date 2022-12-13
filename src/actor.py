@@ -1,11 +1,11 @@
 import copy
 
-from config import *
+from configs.config import *
 from colors import *
-from icon_config import *
+from configs.icon_config import *
 from properties import Property, Tag
 from entity import LightMode
-from enemy_config import *
+from configs.enemy_config import *
 from algos import aStar, calculateHValue
 
 class Actor:

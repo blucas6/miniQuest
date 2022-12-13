@@ -2,11 +2,11 @@ import random as rand
 import copy
 
 from colors import *
-from config import *
+from configs.config import *
 from algos import *
 from entity import *
 from actor import *
-from icon_config import *
+from configs.icon_config import *
 
 class Level:
     def __init__(self, game, id):

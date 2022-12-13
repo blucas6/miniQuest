@@ -1,8 +1,7 @@
-from turtle import back
 import pygame
 
 from colors import *
-from config import *
+from configs.config import *
 
 class Tileset:
     def __init__(self, file, size, margins, spacing):

@@ -1,9 +1,9 @@
 from copy import deepcopy
 
-from config import *
+from configs.config import *
 from colors import *
 from algos import *
-from icon_config import PLAYER_ICON
+from configs.icon_config import PLAYER_ICON
 from properties import Property, Tag
 from entity import LightMode
 
@@ -61,7 +61,9 @@ class Player:
         return True
 
     def Attack(self, c_obj):
-        c_obj.takeDmg(self.STR)
+        damage = self.STR
+        self.game.MENUS[0].MSG_STR.append("Dealt %s damage" % (damage))
+        c_obj.takeDmg(damage)
 
     def FOVsight(self, level_obj):
         # access astar grid from level

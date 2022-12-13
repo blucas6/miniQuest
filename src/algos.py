@@ -1,7 +1,7 @@
 import math
 import random
 
-from config import *
+from configs.config import *
 
 def drawline(grid, pos, end):
     dx = abs(pos[0] - end[0])
@@ -199,6 +199,7 @@ def aStar(src, dest, gridw, gridh, grid):
     grid[dest[1]][dest[0]] = "D"
     for r in grid:
         print(r)
+    return -1
     
 
 

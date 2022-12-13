@@ -1,9 +1,9 @@
 import pygame
 
-from config import *
+from configs.config import *
 from colors import *
 from entity import UI, LightMode
-from icon_config import *
+from configs.icon_config import *
 from entity import Property
 
 class Display:
