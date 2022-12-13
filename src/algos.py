@@ -100,19 +100,19 @@ def tracePath(cellDetails, dest):
 def aStar(src, dest, gridw, gridh, grid):
     if not isValid(src, gridw, gridh):
         print("ERROR: Astar - invalid src")
-        return
+        return -1
     
     if not isValid(dest, gridw, gridh):
         print("ERROR: Astar - invalid dest")
-        return
+        return -1
 
-    if not isUnblocked(src, grid, gridw, gridh) or not isUnblocked(dest, grid, gridw, gridh):
-        print("ERROR: Astar - src or dest blocked")
-        return
+    # if not isUnblocked(src, grid, gridw, gridh) or not isUnblocked(dest, grid, gridw, gridh):
+    #     print("ERROR: Astar - src or dest blocked")
+    #     return
     
     if isDestination(src, dest):
         print("NOTE: src at dest")
-        return
+        return -1
 
     # closed list boolean 2d array showing that no cell is included
     closed_list = []
@@ -194,8 +194,12 @@ def aStar(src, dest, gridw, gridh, grid):
                                 cellDetails[neighbour[1]][neighbour[0]].m = mnew
                                 cellDetails[neighbour[1]][neighbour[0]].mdir = mdirNew
                                 cellDetails[neighbour[1]][neighbour[0]].parent = [i, j]
-
     print("ERROR: Astar - failed to find path")
+    grid[src[1]][src[0]] = "S"
+    grid[dest[1]][dest[0]] = "D"
+    for r in grid:
+        print(r)
+    
 
 
 def floodFill(xstart,ystart,start_color,color_to_update, matrix, width, height):

@@ -2,7 +2,7 @@ import pygame
 
 from config import *
 from colors import *
-from entity import UI, LighMode
+from entity import UI, LightMode
 from icon_config import *
 from entity import Property
 
@@ -93,23 +93,23 @@ class Display:
         # print("~~~~~Light Map~~~~~~~~")
         # for r in level_o.Light_Map:
         #     for c in r:
-        #         if c == LighMode.UNSEEN:
+        #         if c == LightMode.UNSEEN:
         #             print('U', end="")
-        #         elif c == LighMode.SEEN:
+        #         elif c == LightMode.SEEN:
         #             print('S', end="")
-        #         elif c == LighMode.LIT:
+        #         elif c == LightMode.LIT:
         #             print('L', end="")
         #     print("")
         for row in range(MAP_H):
             for col in range(MAP_W):
-                mode = LighMode.UNSEEN
+                mode = LightMode.UNSEEN
                 # ITEMS / CREATURES
                 if level_o.Level_Map[row][col]:
                     icon = level_o.Level_Map[row][col][0].ICON
                     bg = level_o.Level_Map[row][col][0].BG
                     fg = level_o.Level_Map[row][col][0].FG
                     mode = level_o.Level_Map[row][col][0].MODE
-                    if mode == LighMode.UNSEEN:
+                    if mode == LightMode.UNSEEN:
                         icon = T_FLOOR_UNSEEN
                         bg = VOID
                         fg = WHITE
@@ -120,11 +120,11 @@ class Display:
                     bg = level_o.Tower_Map[row][col].BG
                     fg = level_o.Tower_Map[row][col].FG
                     # check light mode
-                    if level_o.Light_Map[row][col] == LighMode.UNSEEN and level_o.Tower_Map[row][col].PROP != Property.NOTHING:
+                    if level_o.Light_Map[row][col] == LightMode.UNSEEN and level_o.Tower_Map[row][col].PROP == Property.FLOOR:
                         icon = T_FLOOR_UNSEEN
                         bg = VOID
                         fg = WHITE
-                    elif level_o.Light_Map[row][col] == LighMode.LIT and level_o.Tower_Map[row][col].PROP != Property.WALL and level_o.Tower_Map[row][col].PROP != Property.WALL_PIECE:
+                    elif level_o.Light_Map[row][col] == LightMode.LIT and level_o.Tower_Map[row][col].PROP != Property.WALL and level_o.Tower_Map[row][col].PROP != Property.WALL_PIECE:
                         bg = ORANGE
                     self.screen[row + self.map_offset_h][col + self.map_offset_w] = self.Icon(icon, bg, fg)
 

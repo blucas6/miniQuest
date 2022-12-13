@@ -1,4 +1,3 @@
-from time import sleep
 import pygame
 
 from colors import *
@@ -22,6 +21,7 @@ class Game:
 
         # PLAYER
         self.PLAYER = Player(self)
+        self.ADD_ENERGY = 0
 
         # screen array to hold all image tiles
         self.screen_tiles = []
@@ -53,6 +53,7 @@ class Game:
 
     def main(self):
         # game loop
+        self.PLAYER.update()
         self.update()
         self.render()
         pygame.display.update()
@@ -65,31 +66,36 @@ class Game:
             # print("TURN:", self.TURN)
             # self.clock.tick(60)
 
-
     def update(self):
-        self.CURRENT_LV_O.clearLightMap()
 
-        # PLAYER FOV 
-        self.PLAYER.FOVsight(self.CURRENT_LV_O)
+        # UPDATE PLAYER - player action, light map generated from FOV
+        self.PLAYER.update()
 
         # UPDATE entities and check if they are being ACTIVATED
-        for e in self.LEVELS[self.CURR_LEVEL].items:
-            if self.PLAYER.POS == e.POS and not e.activated:
-                e.ACTIVATE()
-            e.update()
+        for i in self.LEVELS[self.CURR_LEVEL].items:
+            if self.PLAYER.POS == i.POS and not i.activated:
+                i.ACTIVATE()
+            i.update()
+        
+        # UPDATE creatures and add energy
+        for c in self.CURRENT_LV_O.creatures:
+            c.update(self.ADD_ENERGY)
+        # reset energy back to 0, wait for new energy from player
+        self.ADD_ENERGY = 0
 
         # UPDATE MENUS
         for m in self.MENUS:
-            m.loadStr()
+            m.loadStr() 
 
-        # UPDATE LEVEL MAP
+        # UPDATE LEVEL MAP - create composite level array 
         self.CURRENT_LV_O.update()
     
     def events(self):
         rec_event = False
         while not rec_event:
             # sleep(0.1)
-            for event in pygame.event.get():
+            events = pygame.event.get()
+            for event in events:
                 if event.type == pygame.QUIT:
                     self.playing = False
                     rec_event = True
@@ -99,21 +105,33 @@ class Game:
                         self.playing = False
                         rec_event = True
                     if event.key == pygame.K_LEFT:
-                        if self.PLAYER.move([-1, 0]):
+                        turns = self.PLAYER.move([-1, 0])
+                        if turns != -1:
+                            self.ADD_ENERGY = turns
                             rec_event = True
-                    if event.key == pygame.K_RIGHT:
-                        if self.PLAYER.move([1, 0]):
+                            break
+                    elif event.key == pygame.K_RIGHT:
+                        turns = self.PLAYER.move([1, 0])
+                        if turns != -1:
+                            self.ADD_ENERGY = turns
                             rec_event = True
-                    if event.key == pygame.K_UP:
-                        if self.PLAYER.move([0, -1]):
+                            break
+                    elif event.key == pygame.K_UP:
+                        turns = self.PLAYER.move([0, -1])
+                        if turns != -1:
+                            self.ADD_ENERGY = turns
                             rec_event = True
-                    if event.key == pygame.K_DOWN:
-                        if self.PLAYER.move([0, 1]):
+                            break
+                    elif event.key == pygame.K_DOWN:
+                        turns = self.PLAYER.move([0, 1])
+                        if turns != -1:
+                            self.ADD_ENERGY = turns
                             rec_event = True
-                    if event.key == pygame.K_COMMA and (mods & pygame.KMOD_LSHIFT or mods & pygame.KMOD_RSHIFT):
+                            break
+                    elif event.key == pygame.K_COMMA and (mods & pygame.KMOD_LSHIFT or mods & pygame.KMOD_RSHIFT):
                         if self.PLAYER.stairs("up"):
                             rec_event = True
-                    if event.key == pygame.K_PERIOD and (mods & pygame.KMOD_LSHIFT or mods & pygame.KMOD_RSHIFT):
+                    elif event.key == pygame.K_PERIOD and (mods & pygame.KMOD_LSHIFT or mods & pygame.KMOD_RSHIFT):
                         if self.PLAYER.stairs("down"):
                             rec_event = True
 

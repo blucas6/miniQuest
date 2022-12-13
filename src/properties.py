@@ -4,6 +4,12 @@
 
 from enum import Enum
 
+class Tag(Enum):
+    # used for classes of creatures to attack - Enemies vs. neutrals vs. allied
+    ENEMY = 1
+    NEUTRAL = 2
+    ALLIED = 3
+
 class Property(Enum):
     # ENTITIES
     NOTHING = 0

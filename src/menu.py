@@ -82,7 +82,7 @@ class StatBar(Menu):
         Menu.__init__(self, game, w, h, offx, offy)
 
     def genString(self):
-        return "STR:%s DEX:%s LUCK:%s\nT:%s LV:%s" % (self.game.PLAYER.str, self.game.PLAYER.dex, self.game.PLAYER.luck, self.game.TURN, self.game.CURR_LEVEL+1)
+        return "STR:%s DEX:%s LUCK:%s\nT:%s LV:%s H:%s" % (self.game.PLAYER.STR, self.game.PLAYER.DEX, self.game.PLAYER.LUCK, self.game.TURN, self.game.CURR_LEVEL+1, self.game.PLAYER.HEALTH)
 
 
 class InfoBar(Menu):

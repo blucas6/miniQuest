@@ -21,34 +21,46 @@ class Level:
 
         self.available_pts = []     # list of all available points in the tower (no walls)
 
-        self.astarGrid = []         # prebuilt grid of 1s 0s for path calculating
+        self.lightmode_astar = []           # prebuilt grid of 1s 0s for light modes for all cells - used for player FOV
+        self.pathfinding_astar = []         # updated grid with all collisions in level - used for pathfinding
 
         self.genMap()
 
-    def clearLightMap(self):
-        self.Light_Map = self.LoadBlankLevelMap()
-
-    def update(self):
-        # compile Level_Map array with all items and creatures
+    def update(self):       
+        # update Astar Grid
+        self.pathfinding_astar = copy.deepcopy(self.lightmode_astar)
+  
+        # compile Level_Map array with all items and creatures / add blocking items to astar
+        self.Level_Map = self.LoadBlankLevelMap()
         for c in self.creatures:
             lm = self.Light_Map[c.POS[1]][c.POS[0]]
-            if lm == LighMode.SEEN:
-                c.MODE = LighMode.SEEN
-            elif lm == LighMode.LIT:
-                c.MODE = LighMode.LIT
+            if lm == LightMode.SEEN:
+                c.MODE = LightMode.SEEN
+            elif lm == LightMode.LIT:
+                c.MODE = LightMode.LIT
             else:
-                c.MODE = LighMode.UNSEEN
+                c.MODE = LightMode.UNSEEN
             self.Level_Map[c.POS[1]][c.POS[0]].append(c)
         for i in self.items:
             lm = self.Light_Map[i.POS[1]][i.POS[0]]
-            if lm == LighMode.SEEN:
-                i.MODE = LighMode.SEEN
+            if lm == LightMode.SEEN:
+                i.MODE = LightMode.SEEN
                 i.already_seen = True
-            elif lm == LighMode.LIT:
-                i.MODE = LighMode.LIT
-            elif lm == LighMode.UNSEEN and not i.already_seen:
-                i.MODE = LighMode.UNSEEN
+            elif lm == LightMode.LIT:
+                i.MODE = LightMode.LIT
+            elif lm == LightMode.UNSEEN and not i.already_seen:
+                i.MODE = LightMode.UNSEEN
             self.Level_Map[i.POS[1]][i.POS[0]].append(i)
+
+    def generateAstarPathfinding(self):
+        for c in self.creatures:
+            # update astar if collidable
+            if c.isCOLL:
+                self.pathfinding_astar[c.POS[1]][c.POS[0]] = 1
+        for i in self.items:
+            # update astar if collidable
+            if i.isCOLL:
+                self.pathfinding_astar[i.POS[1]][i.POS[0]] = 1
 
     def LoadBlankLevelMap(self):
         m = []
@@ -62,7 +74,7 @@ class Level:
     def ResetLightMap(self):
         for h in range(MAP_H):
             for w in range(MAP_W):
-                self.Light_Map[h][w].append(LighMode.UNSEEN)
+                self.Light_Map[h][w].append(LightMode.UNSEEN)
 
     def genMap(self):
         self.ResetLightMap()
@@ -85,8 +97,8 @@ class Level:
             row = []
             for x in range(MAP_W):
                 row.append(0)
-            self.astarGrid.append(row)
-
+            self.lightmode_astar.append(row)
+        self.pathfinding_astar = copy.deepcopy(self.lightmode_astar)
 
     def genTower(self):     # generates the outside walls of the tower and the floor
         # create wall pts
@@ -98,11 +110,11 @@ class Level:
                 # top n bot
                 if (y == 0 or y == MAP_H-1) and x > CURVATURE and x < MAP_W-1 - CURVATURE:
                     row.append(Wall(self.game, "h", [x,y]))
-                    self.astarGrid[y][x] = 1
+                    self.lightmode_astar[y][x] = 1
                 # right n left
                 elif (x == 0 or x == MAP_W-1) and y > CURVATURE and y < MAP_H-1 - CURVATURE:
                     row.append(Wall(self.game, "v", [x,y]))
-                    self.astarGrid[y][x] = 1
+                    self.lightmode_astar[y][x] = 1
                 else:
                     row.append(Void(self.game, [x,y]))
             self.Tower_Map.append(row)
@@ -127,11 +139,11 @@ class Level:
             path_sym = []
             for p in path:
                 self.Tower_Map[p[1]][p[0]] = Wall(self.game, "c", p)
-                self.astarGrid[p[1]][p[0]] = 1
+                self.lightmode_astar[p[1]][p[0]] = 1
                 path_sym.append([MAP_W-1 - p[0], p[1]])
             for p in path_sym:
                 self.Tower_Map[p[1]][p[0]] = Wall(self.game, "c", p)
-                self.astarGrid[p[1]][p[0]] = 1
+                self.lightmode_astar[p[1]][p[0]] = 1
 
         # TOWER FLOOR
         # pick middle of map and flood fill floor
@@ -167,7 +179,7 @@ class Level:
                 if self.inBounds(s[0]+spot[0], s[1]+spot[1]) and self.available_pts.count([(spot[0] + s[0]), (spot[1] + s[1])]) > 0:
                     self.Tower_Map[spot[1] + s[1]][spot[0] + s[0]] = WallPiece(self.game, [(s[0]+spot[0]), (s[1]+spot[1])])
                     self.available_pts.remove([(spot[0] + s[0]), (spot[1] + s[1])])
-                    self.astarGrid[spot[1] + s[1]][spot[0] + s[0]] = 1
+                    self.lightmode_astar[spot[1] + s[1]][spot[0] + s[0]] = 1
 
     def addStairs(self):
         if self.Lvl_ID == 1:    # no downstairs on level 1

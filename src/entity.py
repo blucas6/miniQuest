@@ -5,7 +5,7 @@ from config import *
 from properties import Property
 from icon_config import *
 
-class LighMode(Enum):
+class LightMode(Enum):
     UNSEEN = 1          # Icon will be turned to a unseen floor piece
     SEEN = 2            # Icon will be turned to ICON
     LIT = 3             # Icon will be turned to ICON but lightened up
@@ -19,7 +19,7 @@ class Entity:
         self.PROP = prop            # entity enum to distinguish between different entities
         self.isCOLL = col           # is the object able to be collided with?
         self.POS = pos
-        self.MODE = LighMode.UNSEEN
+        self.MODE = LightMode.UNSEEN
         
         self.already_seen = False   # entities stay in sight if already seen once
         self.activated = False      # track activation of entities, only ONCE
@@ -86,12 +86,20 @@ class Torch(Entity):
             self.BG = ORANGE
     def update(self):
         if self.activated:
-            self.MODE = LighMode.LIT
-            for coord in [[-1,-1], [-1,0], [-1,1], [0,-1], [0,0], [0,1], [1,-1], [1,0], [1,1], [0,-2], [0,2], [-2,0], [2,0]]:
+            self.MODE = LightMode.LIT
+            for coord in [[-1,-1], [-1,0], [-1,1], [0,-1], [0,0], [0,1], [1,-1], [1,0], [1,1]]:
                 row = self.POS[1] + coord[1]
                 col = self.POS[0] + coord[0]
-                if col >= 0 and col < MAP_W and row >= 0 and row < MAP_H:
-                    self.game.CURRENT_LV_O.Light_Map[row][col] = LighMode.LIT 
+                if col >= 0 and col < MAP_W and row >= 0 and row < MAP_H and self.game.Tower_Map[row][col].PROP != Property.WALL:
+                    self.game.CURRENT_LV_O.Light_Map[row][col] = LightMode.LIT 
+            for o_coord in [[-1,0], [1,0], [0,-1], [0,1]]:
+                row = self.POS[1] + o_coord[1]
+                col = self.POS[0] + o_coord[0]
+                row2 = self.POS[1] + o_coord[1]*2
+                col2 = self.POS[0] +o_coord[0]*2
+                if col >= 0 and col < MAP_W and row >= 0 and row < MAP_H and col2 >= 0 and col2 < MAP_W and row2 >= 0 and row2 < MAP_H:
+                    if self.game.CURRENT_LV_O.Light_Map[row][col] == LightMode.LIT:
+                        self.game.CURRENT_LV_O.Light_Map[row2][col2] = LightMode.LIT
 
 class Void(Entity):
     def __init__(self, game, pos):
