@@ -94,7 +94,7 @@ class HealthBar(Menu):
         self.str_data = self.genString()
         row = 0
         col = 0
-        hp_boxes = round(self.width * self.game.PLAYER.CURR_HEALTH / self.game.PLAYER.HEALTH)
+        hp_boxes = round((self.width-2) * self.game.PLAYER.CURR_HEALTH / self.game.PLAYER.HEALTH)
         print(hp_boxes)
         for c in range(len(self.str_data)):
             # print(row, col, self.height, self.width, self.str_data[c])
@@ -104,7 +104,7 @@ class HealthBar(Menu):
                 col = -1
                 row += 1
             else:
-                if c < hp_boxes:
+                if c < hp_boxes+1 and c != 0:
                     bg = GREEN
                     if self.game.PLAYER.CURR_HEALTH / self.game.PLAYER.HEALTH <= 0.1:
                         bg = RED
