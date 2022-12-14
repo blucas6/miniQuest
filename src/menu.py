@@ -95,7 +95,6 @@ class HealthBar(Menu):
         row = 0
         col = 0
         hp_boxes = round((self.width-2) * self.game.PLAYER.CURR_HEALTH / self.game.PLAYER.HEALTH)
-        print(hp_boxes)
         for c in range(len(self.str_data)):
             # print(row, col, self.height, self.width, self.str_data[c])
             if row > self.height:
