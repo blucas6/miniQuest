@@ -142,7 +142,16 @@ class InfoBar(Menu):
         Menu.__init__(self, game, w, h, offx, offy)
 
     def genString(self):
-        return "Armor:\n\nMainH:\n\nAlt:"
+        armor = ""
+        main = ""
+        alt = ""
+        if self.game.PLAYER.ARMOR != "":
+            armor = self.game.PLAYER.ARMOR.name
+        if self.game.PLAYER.MAIN_HAND != "":
+            main = self.game.PLAYER.MAIN_HAND.name
+        if self.game.PLAYER.ALT_HAND != "":
+            alt = self.game.PLAYER.ALT_HAND.name
+        return "Armor:%s\nMainH:%s\nAlt:%s" % (armor, main, alt)
 
 
 class MessageBar(Menu):

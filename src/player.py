@@ -6,6 +6,7 @@ from algos import *
 from configs.icon_config import PLAYER_ICON
 from properties import Property, Tag
 from entity import LightMode
+from items import *
 
 class Player:
     def __init__(self, game):
@@ -16,6 +17,13 @@ class Player:
         self.FG = WHITE
         self.POS = PLAYER_ST
         self.INFO = Property.PLAYER
+
+        # INVENTORY
+        self.INVENTORY = [Wooden_Sword(), Leather_Armor()]
+
+        self.ARMOR = Leather_Armor()
+        self.MAIN_HAND = Wooden_Sword()
+        self.ALT_HAND = ""
 
         # STATS
         self.HEALTH = PLAYER_ST_HEALTH

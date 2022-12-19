@@ -24,6 +24,12 @@ class Property(Enum):
     PLAYER = 100
     WASP = 101
 
+    # ITEMS
+    WEAPON = 1001
+    RING = 1002
+    ARMOR = 1003
+    PROJECTILE = 1004
+
 def InfoFinder(obj_prop):
     if obj_prop == Property.NOTHING:
         return "Nothing"
