@@ -90,13 +90,13 @@ class Torch(Entity):
             for coord in [[-1,-1], [-1,0], [-1,1], [0,-1], [0,0], [0,1], [1,-1], [1,0], [1,1]]:
                 row = self.POS[1] + coord[1]
                 col = self.POS[0] + coord[0]
-                if col >= 0 and col < MAP_W and row >= 0 and row < MAP_H and self.game.CURRENT_LV_O.Tower_Map[row][col].PROP != Property.WALL:
+                if col >= 0 and col < MAP_W and row >= 0 and row < MAP_H and self.game.CURRENT_LV_O.Tower_Map[row][col].PROP != Property.WALL and self.game.CURRENT_LV_O.Tower_Map[row][col].PROP != Property.WALL_PIECE:
                     self.game.CURRENT_LV_O.Light_Map[row][col] = LightMode.LIT 
             for o_coord in [[-1,0], [1,0], [0,-1], [0,1]]:
                 row = self.POS[1] + o_coord[1]
                 col = self.POS[0] + o_coord[0]
                 row2 = self.POS[1] + o_coord[1]*2
-                col2 = self.POS[0] +o_coord[0]*2
+                col2 = self.POS[0] + o_coord[0]*2
                 if col >= 0 and col < MAP_W and row >= 0 and row < MAP_H and col2 >= 0 and col2 < MAP_W and row2 >= 0 and row2 < MAP_H:
                     if self.game.CURRENT_LV_O.Light_Map[row][col] == LightMode.LIT:
                         self.game.CURRENT_LV_O.Light_Map[row2][col2] = LightMode.LIT
