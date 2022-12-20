@@ -71,7 +71,7 @@ class Player:
 
     def Attack(self, c_obj):
         damage = self.STR
-        self.game.MENUS[0].MSG_STR.append("Dealt %s damage" % (damage))
+        self.game.NewMessage("Dealt %s damage" % (damage))
         c_obj.takeDmg(damage)
 
     def FOVsight(self, level_obj):

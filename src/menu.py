@@ -1,8 +1,8 @@
 import pygame
-import math
 
 from configs.config import *
 from colors import *
+from properties import Context
 
 class Menu:
     def __init__(self, game, w, h, offx, offy):
@@ -34,7 +34,7 @@ class Menu:
                 row.append(img)
             self.contents.append(row)
 
-    def loadStr(self):
+    def update(self):
         self.resetContents()
         self.str_data = self.genString()
         row = 0
@@ -89,7 +89,7 @@ class HealthBar(Menu):
         give_str += (" "*(self.width - len(give_str)-1)) + "]"
         return give_str
 
-    def loadStr(self):
+    def update(self):
         self.resetContents()
         self.str_data = self.genString()
         row = 0
@@ -162,13 +162,24 @@ class MessageBar(Menu):
         offx = 1
         offy = 1
         self.MSG_STR = ["","","Welcome to MiniQuest!"]
+        self.INDEX = 2
         Menu.__init__(self, game, w, h, offx, offy)
 
     def genString(self):
-        give_str = ">" + self.MSG_STR[-1] + "\n" + self.MSG_STR[-2] + "\n" + self.MSG_STR[-3]
+        if self.INDEX == len(self.MSG_STR)-1:
+            give_str = ">" + self.MSG_STR[self.INDEX] + "\n" + self.MSG_STR[self.INDEX-1] + "\n" + self.MSG_STR[self.INDEX-2]
+        else:
+            give_str = ">" + self.MSG_STR[self.INDEX] + " -o(enter)\n" + self.MSG_STR[self.INDEX-1] + "\n" + self.MSG_STR[self.INDEX-2]
+        print(give_str)
         return give_str
 
-    def loadStr(self):
+    def update(self):
+        if self.INDEX < len(self.MSG_STR)-1:
+            self.IncrementIndex()
+        if self.INDEX < len(self.MSG_STR)-1:
+            self.game.SetContext(Context.MESSAGES)
+        elif self.game.CONTEXT == Context.MESSAGES:
+            self.game.SetContext(Context.DEFAULT)
         self.resetContents()
         self.str_data = self.genString()
         row = 0
@@ -196,3 +207,6 @@ class MessageBar(Menu):
                     row += 1
                     col = 0
             col += 1
+
+    def IncrementIndex(self):
+        self.INDEX += 1

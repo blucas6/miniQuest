@@ -1,5 +1,3 @@
-import copy
-
 from configs.config import *
 from colors import *
 from configs.icon_config import *

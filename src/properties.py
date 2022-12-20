@@ -4,6 +4,11 @@
 
 from enum import Enum
 
+class Context(Enum):
+    DEFAULT = 0
+    MESSAGES = 1
+    INVENTORY = 2
+
 class Tag(Enum):
     # used for classes of creatures to attack - Enemies vs. neutrals vs. allied
     ENEMY = 1
