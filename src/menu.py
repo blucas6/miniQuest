@@ -169,8 +169,7 @@ class MessageBar(Menu):
         if self.INDEX == len(self.MSG_STR)-1:
             give_str = ">" + self.MSG_STR[self.INDEX] + "\n" + self.MSG_STR[self.INDEX-1] + "\n" + self.MSG_STR[self.INDEX-2]
         else:
-            give_str = ">" + self.MSG_STR[self.INDEX] + " -o(enter)\n" + self.MSG_STR[self.INDEX-1] + "\n" + self.MSG_STR[self.INDEX-2]
-        print(give_str)
+            give_str = ">" + self.MSG_STR[self.INDEX] + " (enter)\n" + self.MSG_STR[self.INDEX-1] + "\n" + self.MSG_STR[self.INDEX-2]
         return give_str
 
     def update(self):

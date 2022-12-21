@@ -17,23 +17,23 @@ class Tag(Enum):
 
 class Property(Enum):
     # ENTITIES
-    NOTHING = 0
-    WALL = 1
-    WALL_PIECE = 2
-    FLOOR = 3
-    UPSTAIR = 4
-    DOWNSTAIR = 5
-    TORCH = 6
+    NOTHING     = 0
+    WALL        = 1
+    WALL_PIECE  = 2
+    FLOOR       = 3
+    UPSTAIR     = 4
+    DOWNSTAIR   = 5
+    TORCH       = 6
 
     # ACTORS
-    PLAYER = 100
-    WASP = 101
+    PLAYER      = 100
+    WASP        = 101
 
     # ITEMS
-    WEAPON = 1001
-    RING = 1002
-    ARMOR = 1003
-    PROJECTILE = 1004
+    WEAPON      = 1001
+    RING        = 1002
+    ARMOR       = 1003
+    PROJECTILE  = 1004
 
 def InfoFinder(obj_prop):
     if obj_prop == Property.NOTHING:

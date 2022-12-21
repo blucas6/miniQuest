@@ -9,6 +9,7 @@ from menu import *
 from display import Display
 from configs.message_config import *
 from properties import Context
+from items import *
 
 class Game:
     def __init__(self):
@@ -33,7 +34,6 @@ class Game:
 
         self.Displayer = Display(self)
     
-    def newGame(self):
         self.playing = True
 
         if not self.sw.is_integer() or not self.sh.is_integer():
@@ -47,6 +47,9 @@ class Game:
 
         # MENUS
         self.MENUS = [MessageBar(self), StatBar(self), InfoBar(self), HealthBar(self)]
+
+        # ALL ITEMS
+        self.ALL_GAME_ITEMS = [Leather_Armor(), Wooden_Sword()]
 
     def newLevel(self):
         # Create new level and add it to the level list

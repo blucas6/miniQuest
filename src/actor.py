@@ -1,3 +1,6 @@
+import random as rand
+
+
 from configs.config import *
 from colors import *
 from configs.icon_config import *
@@ -7,7 +10,7 @@ from configs.enemy_config import *
 from algos import aStar, calculateHValue
 
 class Actor:
-    def __init__(self, game, prop, col, icon, bg, fg, pos, t_dist, a_range, a_dmg, speed, a_speed, hp, tag):
+    def __init__(self, game, prop, col, icon, bg, fg, pos, t_dist, a_range, speed, ac, hb, a_speed, hp, tag):
         self.game = game
         self.PROP = prop
         self.TAG = tag
@@ -22,7 +25,8 @@ class Actor:
         self.HEALTH = hp
         self.ENERGY = 0
         self.SPEED = speed                  # how much energy to move
-        self.ATTACK = a_dmg                 
+        self.AC = ac
+        self.HitBonus = hb
         self.ATTACK_SPEED = a_speed         # how much energy to attack
         self.attack_range = a_range
         self.tracking_distance = t_dist     # not implemented
@@ -59,7 +63,13 @@ class Actor:
     
     def attack(self):
         if calculateHValue(self.POS, self.game.PLAYER.POS) <= self.attack_range and self.ENERGY >= self.ATTACK_SPEED:
-            self.game.PLAYER.takeDmg(self.ATTACK)
+            roll = rand.randint(0, 20)
+            damage = self.getDmg_Melee()
+            if roll == 20:
+                damage += self.getDmg_Melee()
+                self.game.PLAYER.takeRawDmg(damage)
+            roll += self.HitBonus
+            self.game.PLAYER.takeDmg(roll, damage)
             self.ENERGY -= self.ATTACK_SPEED
             return True
         return False
@@ -68,7 +78,15 @@ class Actor:
         self.HEALTH -= d
         if self.HEALTH <= 0:
             self.game.CURRENT_LV_O.creatures.remove(self)
+    
+    def getDmg_Melee(self):
+        print("ENEMY DEALS NO DAMAGE")
+        return 0
 
 class Wasp(Actor):
     def __init__(self, game, pos):
-        Actor.__init__(self, game, Property.WASP, True, WASP_ICON, VOID, YELLOW, pos, WASP_TRACKING_DISTANCE, MELEE_ATTACK_RANGE, WASP_DMG, NORMAL_SPEED, NORMAL_SPEED, WASP_HP, Tag.ENEMY)
+        Actor.__init__(self, game, Property.WASP, True, WASP_ICON, VOID, YELLOW, pos, WASP_TRACKING_DISTANCE, MELEE_ATTACK_RANGE, NORMAL_SPEED, WASP_AC, WASP_HITBONUS, NORMAL_SPEED, WASP_HP, Tag.ENEMY)
+    
+    def getDmg_Melee(self):
+        # 1d1
+        return 1
