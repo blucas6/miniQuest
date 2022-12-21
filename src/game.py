@@ -13,15 +13,10 @@ from items import *
 
 class Game:
     def __init__(self):
-        pygame.init()
-        self.window = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
         # self.clock = pygame.time.Clock()
         self.playing = False
         self.TURN = 0
         self.CONTEXT = Context.DEFAULT
-
-        # tileset
-        self.TILESET = Tileset(TILESET_FILE, [TILESIZE,TILESIZE], 0, 0)
 
         # PLAYER
         self.PLAYER = Player(self)
@@ -45,11 +40,18 @@ class Game:
         self.LEVELS = [Level(self, 1)]
         self.CURRENT_LV_O = self.LEVELS[self.CURR_LEVEL]
 
-        # MENUS
-        self.MENUS = [MessageBar(self), StatBar(self), InfoBar(self), HealthBar(self)]
-
         # ALL ITEMS
         self.ALL_GAME_ITEMS = [Leather_Armor(), Wooden_Sword()]
+
+    def newGame(self):
+        pygame.init()
+        self.window = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
+
+        # tileset
+        self.TILESET = Tileset(TILESET_FILE, [TILESIZE,TILESIZE], 0, 0)
+
+        # MENUS
+        self.MENUS = [MessageBar(self), StatBar(self), InfoBar(self), HealthBar(self)]
 
     def newLevel(self):
         # Create new level and add it to the level list
