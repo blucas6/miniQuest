@@ -91,6 +91,7 @@ class Player:
                 roll += self.ALT_HAND.AltToHit_Bonus
             if roll >= c_obj.AC:
                 print("Dealt", damage, "damage | roll:", roll, "| enemy ac:", c_obj.AC)
+                self.game.NewMessage("Dealt %s damage" % (damage))
                 c_obj.takeDmg(damage)
         
 
