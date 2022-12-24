@@ -28,6 +28,7 @@ class Property(Enum):
     # ACTORS
     PLAYER      = 100
     WASP        = 101
+    GOBLIN_SCOUT= 102
 
     # ITEMS
     WEAPON      = 1001

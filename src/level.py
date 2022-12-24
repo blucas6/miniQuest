@@ -206,10 +206,10 @@ class Level:
 
     def addCreatures(self):
         print("current level gen:", self.Lvl_ID)
-        amount = rand.randint(1, 5)
+        amount = rand.randint(1, 2)
         for c in range(amount):
             s = rand.randint(0, len(self.available_pts)-1)
-            self.creatures.append(Wasp(self.game, self.available_pts[s]))
+            self.creatures.append(Goblin_Scout(self.game, self.available_pts[s]))
             self.available_pts.remove(self.available_pts[s])
 
     def inBounds(self, x, y):

@@ -79,7 +79,7 @@ class Player:
                 damage += self.MAIN_HAND.MeleeDmg() + self.MAIN_HAND.MeleeDmg()
             if self.ALT_HAND != "":
                 damage += self.ALT_HAND.MeleeDmg() + self.ALT_HAND.MeleeDmg()
-            self.game.NewMessage("Dealt %s damage" % (damage))
+            self.game.NewMessage("Crit! %s damage" % (damage))
             c_obj.takeDmg(damage)
         else:
             roll += self.StatMod(self.STR)
@@ -93,6 +93,9 @@ class Player:
                 print("Dealt", damage, "damage | roll:", roll, "| enemy ac:", c_obj.AC)
                 self.game.NewMessage("Dealt %s damage" % (damage))
                 c_obj.takeDmg(damage)
+            else:
+                self.game.NewMessage("Missed!")
+                print("Missed! | roll:", roll, "| enemy ac:", c_obj.AC)
         
 
     def FOVsight(self, level_obj):

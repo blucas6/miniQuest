@@ -90,3 +90,12 @@ class Wasp(Actor):
     def getDmg_Melee(self):
         # 1d1
         return 1
+
+
+class Goblin_Scout(Actor):
+    def __init__(self, game, pos):
+        Actor.__init__(self, game, Property.GOBLIN_SCOUT, True, GOBLIN_ICON, VOID, GREEN, pos, GOBLIN_TRACKING_DISTANCE, MELEE_ATTACK_RANGE, NORMAL_SPEED, GOBLIN_AC, GOBLIN_HITBONUS, NORMAL_SPEED, GOBLIN_HP, Tag.ENEMY)
+
+    def getDmg_Melee(self):
+        # 1d2
+        return rand.randint(1,2)
