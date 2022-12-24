@@ -42,6 +42,11 @@ class Game:
 
         # ALL ITEMS
         self.ALL_GAME_ITEMS = [Leather_Armor(), Wooden_Sword()]
+        self.ALL_ARMOR = [Leather_Armor()]
+        self.ALL_WEAPONS = [Wooden_Sword(), Iron_Sword()]
+        
+        # ALL MONSTERS
+        self.ALL_MONSTERS = [Wasp(self, [0,0])]
 
     def newGame(self):
         pygame.init()

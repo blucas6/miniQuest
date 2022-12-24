@@ -60,3 +60,20 @@ class Wooden_Sword(Sword):
     def RangedDmg(self):
         # 1d1
         return 1
+
+class Iron_Sword(Sword):
+    def __init__(self):
+        n = "Iron Sword"
+        main_to_hit_bonus = 1
+        alt_to_hit_bonus = 0
+        thrown_bonus = -2
+        weight = 10
+        Sword.__init__(self, n, main_to_hit_bonus, alt_to_hit_bonus, thrown_bonus, weight)
+
+    def MeleeDmg(self):
+        # 1d4
+        return rand.randint(1,4)
+    
+    def RangedDmg(self):
+        #1d1
+        return 1
