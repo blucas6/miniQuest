@@ -11,7 +11,7 @@ class LightMode(Enum):
     LIT = 3             # Icon will be turned to ICON but lightened up
 
 class Entity:
-    def __init__(self, game, prop, icon, bg, fg, col, pos):
+    def __init__(self, game, prop, icon, bg, fg, col, pos, n):
         self.game = game
         self.ICON = icon            # coords to tileset
         self.BG = bg                # background color
@@ -20,6 +20,7 @@ class Entity:
         self.isCOLL = col           # is the object able to be collided with?
         self.POS = pos
         self.MODE = LightMode.UNSEEN
+        self.name = n
         
         self.already_seen = False   # entities stay in sight if already seen once
         self.activated = False      # track activation of entities, only ONCE
@@ -38,11 +39,11 @@ class Entity:
 # *** TOWER *** #
 class WallPiece(Entity):
     def __init__(self, game, pos):
-        Entity.__init__(self, game, Property.WALL_PIECE, T_INS_WALL, VOID, WHITE, True, pos)
+        Entity.__init__(self, game, Property.WALL_PIECE, T_INS_WALL, VOID, WHITE, True, pos, "Wall Piece")
 
 class Floor(Entity):
     def __init__(self, game, pos):
-        Entity.__init__(self, game, Property.FLOOR, T_FLOOR_LIGHT, VOID, WHITE, False, pos)
+        Entity.__init__(self, game, Property.FLOOR, T_FLOOR_LIGHT, VOID, WHITE, False, pos, "Floor")
 
 class Wall(Entity):
     # walls cannot be destroyed otherwise FOV algo will fail
@@ -56,7 +57,7 @@ class Wall(Entity):
         else:
             piece = PLAYER_ICON
             print("ERROR: Invalid piece given")
-        Entity.__init__(self, game, Property.WALL, piece, VOID, WHITE, True, pos)
+        Entity.__init__(self, game, Property.WALL, piece, VOID, WHITE, True, pos, "Wall")
 
 class Stair(Entity):
     def __init__(self, game, dir, pos):
@@ -67,7 +68,7 @@ class Stair(Entity):
             prop = Property.DOWNSTAIR
             icon = DOWNSTAIR
 
-        Entity.__init__(self, game, prop, icon, SEABLUE, WHITE, False, pos)
+        Entity.__init__(self, game, prop, icon, SEABLUE, WHITE, False, pos, "Stair")
     def ACTION(self, dir):
         if dir == "up" and self.PROP == Property.UPSTAIR:
             self.game.changeLevel("up")
@@ -79,7 +80,7 @@ class Stair(Entity):
 
 class Torch(Entity):
     def __init__(self, game, pos):
-        Entity.__init__(self, game, Property.TORCH, TORCH, VOID, BROWN, False, pos)
+        Entity.__init__(self, game, Property.TORCH, TORCH, VOID, BROWN, False, pos, "Torch")
     def ACTIVATE(self):
         if not self.activated:
             self.activated = True
@@ -103,7 +104,7 @@ class Torch(Entity):
 
 class Void(Entity):
     def __init__(self, game, pos):
-        Entity.__init__(self, game, Property.NOTHING, [0,0], VOID, WHITE, False, pos)
+        Entity.__init__(self, game, Property.NOTHING, [0,0], VOID, WHITE, False, pos, "Nothing")
 
 
 # *** UI ENTITIES *** #

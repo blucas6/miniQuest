@@ -9,6 +9,10 @@ PIXEL_BG = (0, 0, 0)                # can't make an icon with a black fg and whi
 PIXEL_FG = (255, 255, 255)              
 TILESIZE = 16
 
+# MULTIPLE ITEMS
+MULT_ITEM_BG = SKYBLUE
+MULT_ITEM_FG = SEABLUE
+
 # LEVELS
 MAP_W = 20     # real dimensions
 MAP_H = 15

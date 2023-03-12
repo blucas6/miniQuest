@@ -5,6 +5,10 @@ from colors import *
 from entity import UI, LightMode
 from configs.icon_config import *
 from entity import Property
+from actor import Actor
+from fluid import Fluid
+from entity import Entity
+from items import Projectile
 
 class Display:
     def __init__(self, g):
@@ -73,7 +77,40 @@ class Display:
                 if j == boxh and i == boxw:
                     self.screen[j][i] = self.Icon(UI("br").ICON, UI_BG, UI_FG)
 
+    def loadTileGraphic(self, things):
+        item_count = 0
+        proj_obj = ""
+        if isinstance(things[0], Actor):
+            icon = things[0].ICON
+            bg = things[0].BG
+            fg = things[0].FG
+            mode = things[0].MODE
+            if isinstance(things[-1], Fluid):
+                bg = things[-1].BG
+        else:
+            for t in things:
+                if isinstance(t, Entity):
+                    icon = t.ICON
+                    bg = t.BG
+                    fg = t.FG
+                    mode = t.MODE
+                    item_count += 1
+                    if isinstance(t, Projectile):
+                        proj_obj = t
+            if item_count > 1:
+                if proj_obj == "" or not proj_obj.moving:
+                    bg = MULT_ITEM_BG
+                    fg = MULT_ITEM_FG
+            if isinstance(things[-1], Fluid):
+                bg = things[-1].BG
+                if item_count == 0:
+                    icon = things[-1].ICON
+                    fg = things[-1].FG
+                    mode = things[-1].MODE
+        return icon, bg, fg, mode
+
     def DisplayScreen(self, menus_list, level_o, player_o):
+        # CREATE UI FOR SCREEN
         self.CreateUI()
 
         # ADD MENUS TO SCREEN
@@ -103,12 +140,9 @@ class Display:
         for row in range(MAP_H):
             for col in range(MAP_W):
                 mode = LightMode.UNSEEN
-                # ITEMS / CREATURES
+                # ITEMS / CREATURES / FLUIDS
                 if level_o.Level_Map[row][col]:
-                    icon = level_o.Level_Map[row][col][0].ICON
-                    bg = level_o.Level_Map[row][col][0].BG
-                    fg = level_o.Level_Map[row][col][0].FG
-                    mode = level_o.Level_Map[row][col][0].MODE
+                    icon, bg, fg, mode = self.loadTileGraphic(level_o.Level_Map[row][col])
                     if mode == LightMode.UNSEEN:
                         icon = T_FLOOR_UNSEEN
                         bg = VOID

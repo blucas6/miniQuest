@@ -22,8 +22,8 @@ class Player:
         # INVENTORY
         self.INVENTORY = []
 
-        self.ARMOR = Leather_Armor()
-        self.MAIN_HAND = Wooden_Sword()
+        self.ARMOR = Leather_Armor(self.game)
+        self.MAIN_HAND = Wooden_Sword(self.game)
         self.ALT_HAND = ""
 
         # STATS
@@ -85,10 +85,10 @@ class Player:
             roll += self.StatMod(self.STR)
             if self.MAIN_HAND != "":
                 damage += self.MAIN_HAND.MeleeDmg()
-                roll += self.MAIN_HAND.MainToHit_Bonus
+                roll += self.MAIN_HAND.MainToHitBonus
             if self.ALT_HAND != "":
                 damage += self.ALT_HAND.MeleeDmg()
-                roll += self.ALT_HAND.AltToHit_Bonus
+                roll += self.ALT_HAND.AltToHitBonus
             if roll >= c_obj.AC:
                 print("Dealt", damage, "damage | roll:", roll, "| enemy ac:", c_obj.AC)
                 self.game.NewMessage("Dealt %s damage" % (damage))
@@ -97,7 +97,6 @@ class Player:
                 self.game.NewMessage("Missed!")
                 print("Missed! | roll:", roll, "| enemy ac:", c_obj.AC)
         
-
     def FOVsight(self, level_obj):
         # access astar grid from level
         grid = deepcopy(self.game.LEVELS[self.game.CURR_LEVEL].lightmode_astar)

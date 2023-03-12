@@ -25,6 +25,9 @@ class Property(Enum):
     DOWNSTAIR   = 5
     TORCH       = 6
 
+    # FLUID
+    BLOOD       = 50
+
     # ACTORS
     PLAYER      = 100
     WASP        = 101
@@ -35,6 +38,7 @@ class Property(Enum):
     RING        = 1002
     ARMOR       = 1003
     PROJECTILE  = 1004
+    LAUNCHER    = 1005
 
 def InfoFinder(obj_prop):
     if obj_prop == Property.NOTHING:

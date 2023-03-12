@@ -41,9 +41,9 @@ class Game:
         self.CURRENT_LV_O = self.LEVELS[self.CURR_LEVEL]
 
         # ALL ITEMS
-        self.ALL_GAME_ITEMS = [Leather_Armor(), Wooden_Sword()]
-        self.ALL_ARMOR = [Leather_Armor()]
-        self.ALL_WEAPONS = [Wooden_Sword(), Iron_Sword()]
+        self.ALL_GAME_ITEMS = [Leather_Armor(self), Wooden_Sword(self)]
+        self.ALL_ARMOR = [Leather_Armor(self)]
+        self.ALL_WEAPONS = [Wooden_Sword(self), Iron_Sword(self)]
         
         # ALL MONSTERS
         self.ALL_MONSTERS = [Wasp(self, [0,0])]
@@ -75,7 +75,6 @@ class Game:
             self.events()
             self.update()
             self.render()
-            pygame.display.update()
             # print("TURN:", self.TURN)
             # self.clock.tick(60)
 
@@ -163,6 +162,8 @@ class Game:
         for row in range(len(self.screen_tiles)):
             for col in range(len(self.screen_tiles[0])):
                 self.window.blit(self.screen_tiles[row][col], (col*TILESIZE, row*TILESIZE))
+
+        pygame.display.update()
 
 
     def changeLevel(self, dir):

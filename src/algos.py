@@ -1,7 +1,52 @@
 import math
 import random
+from copy import deepcopy
 
 from configs.config import *
+
+def straightPath(st, end, grid):
+    dir = ""
+    if st == end:
+        return ""
+    # vertical
+    if st[0] == end[0]:
+        while st != end:
+            if st[1] - end[1] > 0:
+                dir = "up"
+                st[1] -= 1
+            else:
+                st[1] += 1
+                dir = "down"
+            if grid[st[1]][st[0]] == 1:
+                return ""
+        return dir
+    # horizontal
+    elif st[1] == end[1]:
+        while st != end:
+            if st[0] - end[0] > 0:
+                dir = "left"
+                st[0] -= 1
+            else:
+                st[0] += 1
+                dir = "right"
+            if grid[st[1]][st[0]] == 1:
+                return ""
+        return dir
+    else:
+        return ""
+
+# # Straight path test
+# grid = [[0,0,0,0,0],
+#         [0,1,0,0,0],
+#         [0,0,0,0,0],
+#         [0,0,0,0,0]]
+# st = [0,1]
+# end = [3,1]
+# dir = straightPath(st, end, grid)
+# if dir != "":
+#     print(dir)
+# else:
+#     print("no path")
 
 def drawline(grid, pos, end):
     dx = abs(pos[0] - end[0])
@@ -97,7 +142,7 @@ def tracePath(cellDetails, dest):
     path.reverse()
     return path
 
-def aStar(src, dest, gridw, gridh, grid):
+def aStar(src, dest, gridw, gridh, grid, momentum=1.0):
     if not isValid(src, gridw, gridh):
         print("ERROR: Astar - invalid src")
         return -1
@@ -180,7 +225,7 @@ def aStar(src, dest, gridw, gridh, grid):
                             elif addx==-1 and addy==0:       #left
                                 mdirNew = "left"
                             if cellDetails[j][i].mdir == mdirNew:
-                                mnew = cellDetails[j][i].m + 1.0
+                                mnew = cellDetails[j][i].m + momentum
                             else:
                                 mnew = 0.0
 

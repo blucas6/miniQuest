@@ -15,9 +15,10 @@ class Level:
 
         self.Light_Map = self.LoadBlankLevelMap()   # controls what light mode each tile has - unseen, seen, lit    
         self.Tower_Map = []                         # stores all floors and wall tiles
-        self.Level_Map = self.LoadBlankLevelMap()   # conglamerate of items/creatures in one double array
-        self.items = []
-        self.creatures = []
+        self.Level_Map = self.LoadBlankLevelMap()   # conglamerate of items/creatures/fluid in one double array - [0] is always a creature if there is one
+        self.items = []                             # level items to be shown on item layer
+        self.creatures = []                         # creatures in the level
+        self.fluids = []                            # fluids in the level
 
         self.available_pts = []     # list of all available points in the tower (no walls)
 
@@ -51,8 +52,19 @@ class Level:
             elif lm == LightMode.UNSEEN and not i.already_seen:
                 i.MODE = LightMode.UNSEEN
             self.Level_Map[i.POS[1]][i.POS[0]].append(i)
-
+        for f in self.fluids:
+            lm = self.Light_Map[f.POS[1]][f.POS[0]]
+            if lm == LightMode.SEEN:
+                f.MODE = LightMode.SEEN
+            elif lm == LightMode.LIT:
+                f.MODE = LightMode.LIT
+            else:
+                f.MODE = LightMode.UNSEEN
+            self.Level_Map[f.POS[1]][f.POS[0]].append(f)
+    
     def generateAstarPathfinding(self):
+        # update Astar Grid
+        self.pathfinding_astar = copy.deepcopy(self.lightmode_astar)
         for c in self.creatures:
             # update astar if collidable
             if c.isCOLL:
@@ -85,9 +97,6 @@ class Level:
         self.genWalls()
         self.addTorches()
         self.addCreatures()
-
-        # for row in self.astarGrid:
-        #     print(row)
 
         self.update()
 
@@ -128,12 +137,9 @@ class Level:
                 row.append(0)
             grid.append(row)
 
-        # for r in grid:
-        #     print(r)
         # add corners
         c_points = [[0, CURVATURE], [CURVATURE, 0], [CURVATURE, MAP_H-1], [0, MAP_H-1 - CURVATURE]]
         for c in range(0, 4, 2):
-            # print(c_points[c], c_points[c+1], MAP_W, MAP_H)
             path = aStar(c_points[c], c_points[c+1], MAP_W, MAP_H, grid)
             # calculate symmetric path across horiz
             path_sym = []
@@ -190,7 +196,6 @@ class Level:
             # add downstair where player is standing
             dwn = copy.deepcopy(self.game.PLAYER.POS)
             self.items.append(Stair(self.game, "down", dwn))
-            # print("added stair", dwn)
             self.available_pts.remove(dwn)
             # add upstair somewhere
             s = rand.randint(0, len(self.available_pts)-1)
@@ -206,7 +211,7 @@ class Level:
 
     def addCreatures(self):
         print("current level gen:", self.Lvl_ID)
-        amount = rand.randint(1, 2)
+        amount = rand.randint(1, 1)
         for c in range(amount):
             s = rand.randint(0, len(self.available_pts)-1)
             self.creatures.append(Goblin_Scout(self.game, self.available_pts[s]))
